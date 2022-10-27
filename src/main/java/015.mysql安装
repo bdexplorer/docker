@@ -1,0 +1,86 @@
+需要在docker hub上查看镜像的用法
+
+1、使用mysql镜像
+	docker run --name my-mysql -p 3306:3306 --net=host -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7
+
+	docker安装的mysql不能识别中文。
+
+	show variables like 'character%'
+
+2、实战版
+	docker run -d -p 3306:3306 --privileged=true \
+	-v /opt/bigdata/mysql/log:/var/log/mysql \
+	-v /opt/bigdata/mysql/data:/var/lib/mysql \
+	-v /opt/bigdata/mysql/conf:/etc/mysql/conf.d \
+	-e MYSQL_ROOT_PASSWORD=123456 --name mysql --net=host mysql:5.7
+
+	在conf中添加my.cnf
+		[client]
+        default_character_set=utf8
+        [mysqld]
+        collation_server=utf8_general_ci
+        character_set_server=utf8
+
+
+3、主从复制
+	主：
+	docker run -d -p 3306:3306 --privileged=true \
+	-v /opt/bigdata/mysql/log:/var/log/mysql \
+	-v /opt/bigdata/mysql/data:/var/lib/mysql \
+	-v /opt/bigdata/mysql/conf:/etc/mysql/conf.d \
+	-e MYSQL_ROOT_PASSWORD=123456 --name mysql-1 --net=host mysql:5.7
+
+	修改my.cnf
+		[client]
+		default_character_set=utf8
+		[mysqld]
+		collation_server=utf8_general_ci
+        character_set_server=utf8
+		server_id=101
+		# 指定不需要同步的数据库名称
+		binlog-ignore-db=mysql
+		log-bin=mall-mysql-bin
+		binlog_cache_size=1M
+		binlog_format=mixed
+		expire_logs_days=7
+		slave_skip_errors=1062
+
+	创建同步数据的用户
+		CREATE USER 'slave'@'%' IDENTIFIED BY '123456';
+		GRANT REPLICATION SLAVE,REPLICATION CLIENT ON *.* TO 'slave'@'%';
+
+	从：
+	docker run -d -p 3306:3306 --privileged=true \
+    -v /opt/bigdata/mysql/log:/var/log/mysql \
+    -v /opt/bigdata/mysql/data:/var/lib/mysql \
+    -v /opt/bigdata/mysql/conf:/etc/mysql/conf.d \
+    -e MYSQL_ROOT_PASSWORD=123456 --name mysql-2 --net=host mysql:5.7
+
+    修改my.cnf
+		[client]
+		default_character_set=utf8
+		[mysqld]
+		collation_server=utf8_general_ci
+		character_set_server=utf8
+		server_id=102
+		binlog-ignore-db=mysql
+		log-bin=mall-mysql-slave1-bin
+		binlog_cache_size=1M
+		binlog_format=mixed
+		expire_logs_days=7
+		slave_skip_errors=1062
+		relay_log=mall-mysql-relay-bin
+		log_slave_updates=1
+		read_only=1
+
+在主机查看状态
+	show master status;
+
+在从数据库中配置主从复制
+	change master to master_host='bigdata03',master_user='slave',master_password='123456', master_port=3306,master_log_file='mall-mysql-bin.000001',master_log_pos=625,master_connect_retry=30
+
+	查看同步状态：
+		show slave status \G;
+
+	开启主从同步
+		start slave;

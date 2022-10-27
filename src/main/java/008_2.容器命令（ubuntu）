@@ -1,0 +1,84 @@
+ubuntu的镜像比较小 - 70M
+
+新建、启动容器
+	docker run [options] image-id [COMMAND] [ARG...]
+		options:
+			--name="" 为容器指定名称
+			-d 后台运行容器并返回容器id（守护式启动）
+
+			-i 以交互模式运行容器，通常与-t同时使用
+			-t 为容器分配一个未输入终端。
+
+			-P 随机端口映射
+			-p 指定端口映射
+				-p host-port:container-port
+				-p ip:host-port:container-port
+				-p ip::container-port 随机分配端口
+				-p host-port:containerPort:udp 指定协议
+				-p 81:80 -p 443:443 指定多个
+
+		启动交互式容器
+			docker run -it ubuntu /bin/bash
+
+列出当前正在运行的容器
+	docker ps [OPTIONS]
+	docker ps --help
+
+		-a 列出当前所有运行的容器 + 历史运行过的容器
+		-l 显示最近创建的容器
+		-n 显示最近n个创建的容器
+		-q 静默模式，只显示容器编号。
+
+退出容器
+	exit run进去容器，exit退出，容器停止
+	ctrl+p+q run进去容器，容器不停止
+
+启动已经停止的容器
+	docker start 容器id
+	docker restart 容器id
+	docker stop 容器id
+	docker kill 容器id 强制停止
+
+	docker rm 容器id -- 需要先停止
+	docker rm -f 容器id -- 强制删除
+
+*****
+启动守护式容器
+	docker run -d 容器名
+
+	Docker后台运行，就必须有一个前台进程。容器运行的命令如果不是那些一直挂起的命令（top、tail）
+	容器就会自动退出。
+
+	像tomcat这种需要
+
+查看日志：
+	docker logs containerId
+
+查看容器内部负载
+	docker top containerId
+
+查看容器内部细节
+	docker inspect containerId
+		查看网络
+		容器卷
+		命令
+
+进入正运行容器
+	docker exec -it containerId /bin/bash
+	docker attach containerId
+
+	attach直接进入容器启动命令的终端，不会启动新的进程，用exit退出，会导致容器停止。
+	exec在容器中打开新的终端，并且可以启动新的进程。用exit退出，不会导致容器的停止
+
+	推荐使用exec
+
+
+从容器拷贝到主机
+	docker cp 容器id:容器内路径 目的主机路径
+
+导入和导出容器
+	docker export 导出容器的内容流作为一个tar归档文件
+	docker import 从tar包中的内容创建一个新的容器
+
+	docker export containerId > abcd.tar
+	cat abcd.tar | docker import - chenwan/ubuntu:3.7

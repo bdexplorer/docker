@@ -1,0 +1,12 @@
+报错：
+	OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/var/lib/docker/containers/24e227bcd5dbf7371044b54da7ec7969235f8b7065bcb73f9345bf96f0209039/resolv.conf" to rootfs at "/etc/resolv.conf": possibly malicious path detected -- refusing to operate on /etc/resolv.conf: unknown
+解决方法：
+	sed -i 's/ -H unix:\/\///' /usr/lib/systemd/system/docker.service
+    sed -i 's/ -H fd:\/\///' /usr/lib/systemd/system/docker.service
+    systemctl daemon-reload
+    rm -fr /var/lib/docker
+
+    vim /etc/docker/daemon.json 添加：
+    {
+    "registry-mirrors": ["https://d8b3zdiw.mirror.aliyuncs.com"]
+    }

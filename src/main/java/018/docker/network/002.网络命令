@@ -1,0 +1,14 @@
+docker network ls
+	[root@bigdata03 ~]# docker network ls
+    NETWORK ID     NAME      DRIVER    SCOPE
+    5ba1169945ee   bridge    bridge    local
+    4d09025e81e4   host      host      local
+    977f458a301d   none      null      local
+
+默认创建三大网络模式：
+	常用bridge
+
+docker network --help
+
+docker network create aa
+docker network rm aa

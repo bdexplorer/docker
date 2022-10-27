@@ -1,0 +1,26 @@
+docker服务默认会穿将一个docker0网桥，该桥接网络名称为docker0，它在内核层连通了其他的物理或虚拟网卡。
+这就将所有容器和本地主机都放到了同一个物理网络。
+Docker0默认指定了docker0接口的IP地址和子网掩码，让主机和容器之间可以通过网桥相互通信。
+
+整个宿主机的网桥模式都是docker0，类似一个交换机有一堆接口，每个接口叫veth，
+在本地主机和容器内分别创建一个虚拟接口，并让它们比起连通（veth pair）
+	container（eh0）<-> （veth）docker0 <-> 宿主机
+
+每个容器实例内部也有一个网卡，叫eth0
+docker0上面的每个veth匹配某个容器实例内部的eth0，两两配对，意义匹。
+
+ip addr 可以看到网桥一一对应关系
+	宿主机：
+	22: veth0bbc697@if21: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP
+    link/ether 0e:f4:de:16:89:f7 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::cf4:deff:fe16:89f7/64 scope link
+       valid_lft forever preferred_lft forever
+
+    容器内部
+	21: eth0@if22: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+    valid_lft forever preferred_lft forever
+
+    22: veth0bbc697@if21 （宿主机）
+    21: eth0@if22 （容器）

@@ -1,0 +1,42 @@
+Dockerfile - 文件必须最好以这个命名
+
+FROM centos
+MAINTAINER chenwan@qq.com
+
+ENV MYPATH /usr/local
+WORKDIR $MYPATH
+
+# 修改yum源 -- 不修改装不成功
+RUN rm -rf /etc/yum.repos.d/*
+ADD Centos-8.repo /etc/yum.repos.d/
+RUN mv /etc/yum.repos.d/Centos-8.repo /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+RUN yum clean all
+RUN yum makecache
+
+# 安装vim
+RUN yum -y install vim
+# 安装ifconfig
+RUN yum -y install net-tools
+# 安装jdk8及lib库
+RUN yum -y install glibc.i686
+RUN mkdir /usr/local/java
+ADD jdk-8u192-linux-x64.tar.gz /usr/local/java
+ENV JAVA_HOME /usr/local/java/jdk1.8.0_192
+ENV JRE_HOME $JAVA_HOME/jre
+ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH
+ENV PATH $JAVA_HOME/bin:$PATH
+
+EXPOSE 80
+
+CMD echo $MYPATH  # 会生成虚悬镜像
+CMD echo "success--------------ok" # 会生成虚悬镜像
+CMD /bin/bash
+
+构建
+docker build -t 新镜像名字:TAG .
+	-t target string
+
+docker build -t centosjava8:1.8 .
+
+# 需要加--network=host
+docker build --network=host -t centosjava8:1.8 .

@@ -1,0 +1,4 @@
+1、自定义镜像centos + java8
+	docker run -it centos /bin/bash
+
+	增加vim + ifconfig + jdk8

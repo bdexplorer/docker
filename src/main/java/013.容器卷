@@ -1,0 +1,18 @@
+1、Docker挂载主机目录访问如果出现cannot open directory: Permission denied
+	解决方法 在挂载目录后多加一个--privilege=true
+
+-v 宿主机路径:容器路径 --privilege=true
+
+容器数据 映射到 宿主机目录
+
+容器内只读
+	docker run -it --privileged=true -v /hostpath:/containerpath:ro
+
+	touch: cannot touch '1.txt': Read-only file system
+
+默认是读写 rw
+
+2、 容器卷的继承
+	容器2继承容器1的卷规则
+	docker run -it --privileged=true --volumes-from u1 --name u3 ubuntu
+

@@ -1,0 +1,73 @@
+redis 集群 3主3从
+1、启动docker服务
+docker run -d --name redis-node-1 --privileged=true \
+-v /opt/bigdata/redis-node-1/redis.conf:/etc/redis/redis.conf \
+-v /opt/bigdata/redis-node-1/data:/data \
+--net=host \
+redis:6.0.8 --cluster-enabled yes  --appendonly yes --port 6381
+
+docker run -d --name redis-node-2 --privileged=true \
+-v /opt/bigdata/redis-node-2/redis.conf:/etc/redis/redis.conf \
+-v /opt/bigdata/redis-node-2/data:/data \
+--net=host \
+redis:6.0.8 --cluster-enabled yes  --appendonly yes --port 6382
+
+docker run -d --name redis-node-3 --privileged=true \
+-v /opt/bigdata/redis-node-3/redis.conf:/etc/redis/redis.conf \
+-v /opt/bigdata/redis-node-3/data:/data \
+--net=host \
+redis:6.0.8 --cluster-enabled yes  --appendonly yes --port 6383
+
+docker run -d --name redis-node-4 --privileged=true \
+-v /opt/bigdata/redis-node-4/redis.conf:/etc/redis/redis.conf \
+-v /opt/bigdata/redis-node-4/data:/data \
+--net=host \
+redis:6.0.8 --cluster-enabled yes  --appendonly yes --port 6384
+
+docker run -d --name redis-node-5 --privileged=true \
+-v /opt/bigdata/redis-node-5/redis.conf:/etc/redis/redis.conf \
+-v /opt/bigdata/redis-node-5/data:/data \
+--net=host \
+redis:6.0.8 --cluster-enabled yes  --appendonly yes --port 6385
+
+docker run -d --name redis-node-6 --privileged=true \
+-v /opt/bigdata/redis-node-6/redis.conf:/etc/redis/redis.conf \
+-v /opt/bigdata/redis-node-6/data:/data \
+--net=host \
+redis:6.0.8 --cluster-enabled yes  --appendonly yes --port 6386
+
+2、 进入某台机器
+	docker exec -it c984d9787937 /bin/bash
+	redis-cli --cluster create 192.168.1.203:6381 192.168.1.203:6382 192.168.1.203:6383 192.168.1.203:6384 192.168.1.203:6385 192.168.1.203:6386 \
+	--cluster-replicas 1
+
+	--cluster-replicas  为每个master节点创建一个slave节点
+
+	日志：
+		Master[0] -> Slots 0 - 5460
+        Master[1] -> Slots 5461 - 10922
+        Master[2] -> Slots 10923 - 16383
+        Adding replica 192.168.1.203:6385 to 192.168.1.203:6381
+        Adding replica 192.168.1.203:6386 to 192.168.1.203:6382
+        Adding replica 192.168.1.203:6384 to 192.168.1.203:6383
+        >>> Trying to optimize slaves allocation for anti-affinity
+        [WARNING] Some slaves are in the same host as their master
+        M: f2b0c96cdd20eecc53335758fc532992160be0a7 192.168.1.203:6381
+           slots:[0-5460] (5461 slots) master
+        M: 8f37eed8732f18f306f7a8392f9c2b256ceebe9b 192.168.1.203:6382
+           slots:[5461-10922] (5462 slots) master
+        M: bcbb4f046b7a3e8f1ce8b546af4dc82f3df967f8 192.168.1.203:6383
+           slots:[10923-16383] (5461 slots) master
+        S: de94cea85235fe6b0723301ab7f8ee1c5c3ef090 192.168.1.203:6384
+           replicates 8f37eed8732f18f306f7a8392f9c2b256ceebe9b
+        S: faea538fbd8450f094534be0624cf985675190de 192.168.1.203:6385
+           replicates bcbb4f046b7a3e8f1ce8b546af4dc82f3df967f8
+        S: 497c149c9a84847f8897772b5a77a7f1770e661c 192.168.1.203:6386
+           replicates f2b0c96cdd20eecc53335758fc532992160be0a7
+        Can I set the above configuration? (type 'yes' to accept): yes
+
+3、查看状态
+	docker exec -it c984d9787937 /bin/bash
+	redis-cli -p 6381
+		cluster info
+		cluster nodes

@@ -1,0 +1,8 @@
+1、从docker hub上查找tomcat镜像
+	docker search tomcat
+2、拉取tomcat
+	docker pull tomcat
+3、查看
+	docker image tomcat
+4、创建容器实例
+	docker run -it  -p 8080:8080 tomcat

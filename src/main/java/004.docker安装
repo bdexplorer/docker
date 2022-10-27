@@ -1,0 +1,43 @@
+1、移除旧版本docker
+	yum remove docker \
+	docker-client \
+	docker-client-latest \
+	docker-common \
+	docker-latest \
+	docker-latest-logrotate \
+	docker-logrotate \
+	docker-engine
+
+2、安装gcc相关
+	yum -y install gcc
+	yum -y install gcc-c++
+
+3、设置仓库
+	yum install -y yum-utils
+	yum-config-manager \
+		--add-repo \
+		https://download.docker.com/linux/centos/docker-ce.repo
+
+	-- repo为海外ip，可能很慢
+	yum-config-manager \
+    		--add-repo \
+    		http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+4、更新yum的索引
+	yum makecache fast
+
+-- 准备
+
+5、安装docker ce
+	yum install docker-ce docker-ce-cli containerd.io
+
+6、启动docker
+	systemctl start docker
+
+	docker version
+
+7、运行hello world
+	docker run hello-world
+
+8、卸载
+	yum remove docker-ce docker-ce-cli containerd.io

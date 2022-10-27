@@ -1,0 +1,10 @@
+systemctl start docker -- 启动docker
+systemctl stop docker -- 停止docker
+systemctl restart docker
+systemctl status docker
+systemctl enable docker -- 开机启动
+
+docker info -- 查看docker概要信息
+docker --help 查看总体帮助文档
+
+docker cmd --help 查看具体命令的。

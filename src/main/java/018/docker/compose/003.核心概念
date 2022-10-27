@@ -1,0 +1,5 @@
+1、docker-compose.yml
+2、两要素
+	服务（service）：单个容器
+	工程（project）：由一组关联的容器组成的一个完整业务单元，
+		在docker-compose.yml定义。

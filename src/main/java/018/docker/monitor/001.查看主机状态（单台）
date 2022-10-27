@@ -1,0 +1,18 @@
+docker states 不适合在集群模式下统计
+CIG：
+	CAdvisor：收集+监控
+	InfluxDB：存储
+	Granfana：分析
+
+	CAdvisor：监控工具，包括容器的内存、CPU、网络IO、磁盘IO等，并提供一个简单的实时运行状态。
+				但是只存储2min的数据
+	InfluxDB：基于GO，分布式时序、事件和指标数据库。
+		为了将CAdvisor的数据存储起来，需要将数据存入InfluxDB
+		1、基于时间序列
+		2、可度量性
+		3、基于事件
+	Granfana：
+		开源的数据监控分析可视化平台
+			1、灵活图形化
+			2、可以混合多种风格
+			3、多个数据源

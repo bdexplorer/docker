@@ -1,0 +1,2 @@
+提交容器副本，形成新的镜像
+docker commit -m='add vim cmd' -a='username' containerId chenwan/myubuntu:1.1

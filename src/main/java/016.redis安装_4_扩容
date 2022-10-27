@@ -1,0 +1,35 @@
+1、新增6387、6388redis
+docker run -d --name redis-node-7 --privileged=true \
+-v /opt/bigdata/redis-node-7/redis.conf:/etc/redis/redis.conf \
+-v /opt/bigdata/redis-node-7/data:/data \
+--net=host \
+redis:6.0.8 --cluster-enabled yes  --appendonly yes --port 6387
+
+docker run -d --name redis-node-8 --privileged=true \
+-v /opt/bigdata/redis-node-8/redis.conf:/etc/redis/redis.conf \
+-v /opt/bigdata/redis-node-8/data:/data \
+--net=host \
+redis:6.0.8 --cluster-enabled yes  --appendonly yes --port 6388
+
+2、进入容器
+	docker exec -it redis-node-7 /bin/bash
+	redis-cli --cluster add-node 192.168.1.203:6387 192.168.1.203:6381
+	没有槽位
+
+3、重新分配槽位
+	redis-cli --cluster reshard 192.168.1.203:6381
+	input:
+		4096
+		新增节点id
+		all
+	How many slots do you want to move (from 1 to 16384)? 4096
+    What is the receiving node ID? 0d49be4ac3284fe7691d6c9ece2dea11c10e2544
+    Please enter all the source node IDs.
+      Type 'all' to use all the nodes as source nodes for the hash slots.
+      Type 'done' once you entered all the source nodes IDs.
+    Source node #1: all
+
+	新节点的槽位是从原来节点匀过来的。
+4、新增从节点
+	redis-cli --cluster add-node 192.168.1.203:6388 192.168.1.203:6387 --cluster-slave --cluster-master-id 0d49be4ac3284fe7691d6c9ece2dea11c10e2544
+

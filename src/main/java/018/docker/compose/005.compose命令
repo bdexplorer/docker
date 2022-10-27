@@ -1,0 +1,15 @@
+docker compose -h
+docker compose up 启动所有服务
+docker compose up -d 启动所有服务并后台运行
+docker compose down 停止并删除容器、网络、卷、镜像
+docker compose exec docker-compose.yml里面的id
+	docker-compose exec docker-compose.yml里面的id /bin/bash
+docker compose ps
+docker compose top
+docker compose logs docker-compose.yml里面的id
+docker compose config # 检查配置
+docker compose config -q # 检查配置，有问题输出
+docker compose restart
+docker compose stop
+docker compose start
+

@@ -1,0 +1,13 @@
+1、检测集群槽位
+	redis-cli --cluster check 192.168.1.203:6388
+2、在集群中将从节点删除
+	redis-cli --cluster del-node 192.168.1.203:6388 391e502270ff7c939ce8272b10a6f965fef9459f
+3、将6387的槽号清空，重新分配。
+	redis-cli --cluster reshard 192.168.1.203:6381
+		How many slots do you want to move (from 1 to 16384)? 4096
+        What is the receiving node ID? 8f37eed8732f18f306f7a8392f9c2b256ceebe9b
+        Please enter all the source node IDs.
+          Type 'all' to use all the nodes as source nodes for the hash slots.
+          Type 'done' once you entered all the source nodes IDs.
+        Source node #1: 0d49be4ac3284fe7691d6c9ece2dea11c10e2544
+        Source node #2: done

@@ -1,0 +1,21 @@
+1、验证
+	keys *
+2、在node1设值 redis-cli -p 6381
+	set k1 v1
+	报错：
+       (error) MOVED 12706 192.168.1.203:6383
+       本地设值时槽位超过了本机的槽位
+3、集群连接，redis-cli -p 6381 -c
+	set k1 v1
+		Redirected to slot [12706] located at 192.168.1.203:6383
+        OK
+
+        127.0.0.1:6381> set k1 v1
+        -> Redirected to slot [12706] located at 192.168.1.203:6383
+        OK
+        192.168.1.203:6383>
+
+        会发生跳转
+
+4、检测集群
+	redis-cli --cluster check 192.168.1.203:6381

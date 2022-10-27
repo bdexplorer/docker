@@ -1,0 +1,26 @@
+直接使用宿主机IP地址与外界通信，不再需要额外NAT转换。
+
+container1（eh0）<-> 宿主机 <-> container2（eh0）
+
+使用host模式时，如果还指定端口映射，那这个时候就会有此告警，并且通过-p设置的端口映射不会起作用。
+如果默认端口重复时则递增。
+
+ip addr可以看出 宿主机网络和容器一样
+	1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default
+	    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+	    inet 127.0.0.1/8 scope host lo
+	       valid_lft forever preferred_lft forever
+	    inet6 ::1/128 scope host
+	       valid_lft forever preferred_lft forever
+	2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+	    link/ether 08:00:27:b4:b4:10 brd ff:ff:ff:ff:ff:ff
+	    inet 192.168.1.203/24 brd 192.168.1.255 scope global enp0s3
+	       valid_lft forever preferred_lft forever
+	    inet6 fe80::a00:27ff:feb4:b410/64 scope link
+	       valid_lft forever preferred_lft forever
+	3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+	    link/ether 02:42:07:52:ba:ec brd ff:ff:ff:ff:ff:ff
+	    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+	       valid_lft forever preferred_lft forever
+	    inet6 fe80::42:7ff:fe52:baec/64 scope link
+	       valid_lft forever preferred_lft forever

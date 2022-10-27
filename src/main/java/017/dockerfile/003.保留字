@@ -1,0 +1,30 @@
+FROM amazoncorretto:8 #基础镜像
+MAINTAINER # 镜像作者信息
+RUN
+	RUN <命令行命令> # 相当于在终端执行shell命令
+		RUN yum -y install vim
+EXPOSE # 当前容器对外暴露的端口
+WORKDIR # 指定容器创建后，终端默认登录的工作目录
+USER # 指定镜像以什么样的用户去执行，如果不指定，默认root
+
+ENV # 在构建容器过程中配置环境变量 ENV K V
+VOLUME # 容器卷
+
+ADD 将宿主机目录拷贝进镜像，且会自动处理URL和解压tar压缩包
+COPY 类似于ADD，拷贝文件和目录到镜像中，
+	COPY src dest
+
+CMD 指定容器启动后要干的事情。
+	可以有多个CMD，但只有最后一个生效
+
+ENTRYPOINT 指定容器启动时需要运行的命令
+	ENTRYPOINT不会被docker run后面的命令覆盖，而且这些命令行参数会被当做参数传送给ENTRY命令指定的程序。
+
+	ENTRYPOINT CMD CMD相当于给ENTRYPOINT传参
+
+	ENTRYPOINT ["nginx", "-c"] # 定参
+	CMD ["/etc/nginx/nginx.conf"] # 变参
+
+	默认 nginx -c /etc/nginx/nginx.conf
+	docker run nginx:test -c /etc/nginx/new.conf 相当于nginx -c /etc/nginx/new.conf
+

@@ -1,0 +1,13 @@
+bridge：为每个容器分配、设置ip等，并将容器连接到一个docker0虚拟网桥，默认模式。
+host：容器将不会虚拟出自己的网卡，配置ip等，而是使用宿主机ip和端口
+none：容器有独立的Network namespace，但并没有对其进行任何网络设置
+container：新创建容器不会创建自己的网卡和配置自己的ip，而是和一个指定的容器共享IP、端口范围。
+
+
+--network bridge
+--network host
+--network none
+--network container:Name 或者容器id
+
+docker 内部容器的ip会变化
+

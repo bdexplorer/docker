@@ -1,0 +1,8 @@
+REPOSITORY 和 TAG 为 none的镜像
+
+构建或者删除的时候造成的
+
+查看虚悬镜像
+	docker image ls -f dangling=true
+删除虚悬镜像
+	docker image prune

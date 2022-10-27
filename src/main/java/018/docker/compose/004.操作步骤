@@ -1,0 +1,3 @@
+1、编写DockerFile定义各个微服务的
+2、通过docker-compose.yml定义一个完整的业务单元
+3、运行docker-compose up命令启动并运行整个应用程序，完成一键部署。

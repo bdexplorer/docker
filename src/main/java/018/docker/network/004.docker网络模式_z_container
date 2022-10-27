@@ -1,0 +1,4 @@
+container1<-> container2(eht0) <-> docker0(veth) <-> 主机
+
+--network container:u1
+如果container2关闭，container1只有lo 127.0.0.1网络

@@ -1,0 +1,8 @@
+1、注册阿里云账号登录
+2、容器镜像服务->镜像加速器
+
+修改 /etc/docker/daemon.json
+
+systemctl daemon-reload
+systemctl restart docker
+
